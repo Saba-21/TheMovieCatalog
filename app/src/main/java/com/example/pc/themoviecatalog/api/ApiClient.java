@@ -1,4 +1,4 @@
-package com.example.pc.themoviecatalog;
+package com.example.pc.themoviecatalog.api;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

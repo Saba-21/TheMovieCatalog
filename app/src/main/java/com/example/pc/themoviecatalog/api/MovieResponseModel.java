@@ -1,4 +1,4 @@
-package com.example.pc.themoviecatalog;
+package com.example.pc.themoviecatalog.api;
 
 import com.example.pc.themoviecatalog.models.Genre;
 import com.example.pc.themoviecatalog.models.ProductionCompany;
@@ -90,5 +90,34 @@ public class MovieResponseModel {
     @SerializedName("vote_count")
     @Expose
     public Integer voteCount;
+
+    public String getGenres(){
+        StringBuilder result  = new StringBuilder("");
+        for (Genre item:genres)
+            result.append(item.name+", ");
+        result.deleteCharAt(result.length()-2);
+        return result.toString();
+    }
+    public String getLanguages(){
+        StringBuilder result  = new StringBuilder("");
+        for (SpokenLanguage item:spokenLanguages)
+            result.append(item.name+", ");
+        result.deleteCharAt(result.length()-2);
+        return result.toString();
+    }
+    public String getCountries(){
+        StringBuilder result  = new StringBuilder("");
+        for (ProductionCountry item:productionCountries)
+            result.append(item.name+", ");
+        result.deleteCharAt(result.length()-2);
+        return result.toString();
+    }
+    public String getCompanies(){
+        StringBuilder result  = new StringBuilder("");
+        for (ProductionCompany item:productionCompanies)
+            result.append(item.name+", ");
+        result.deleteCharAt(result.length()-2);
+        return result.toString();
+    }
 
 }
