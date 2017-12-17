@@ -1,6 +1,9 @@
 package com.example.pc.themoviecatalog.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +25,8 @@ import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class FragGeneration extends Fragment implements View.OnClickListener {
 
@@ -177,8 +182,28 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
         donNotLike.setOnClickListener(this);
     }
 
+    public void saveToSharedPreferences(){
+        SharedPreferences.Editor editor = getActivity().getSharedPreferences("movie", Context.MODE_PRIVATE).edit();
+        editor.putInt("index", index);
+        editor.putInt("page", page);
+        editor.apply();
+    }
+
+    public void getValuesFromSharedPreferences(){
+        SharedPreferences prefs = getActivity().getSharedPreferences("movie", Context.MODE_PRIVATE);
+        index = prefs.getInt("index",1);
+        page = prefs.getInt("page",1);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getValuesFromSharedPreferences();
+    }
+
     @Override
     public void onClick(View v) {
+        saveToSharedPreferences();
         Animation scaleAnimation = AnimationUtils.loadAnimation(getContext(),R.anim.scale);
         switch (v.getId()) {
             case R.id.like_watch:
