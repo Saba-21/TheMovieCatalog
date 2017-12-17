@@ -21,6 +21,8 @@ public class DbModel {
 
         public static final String id = "id";
 
+        public static final String list = "list";
+
         public static final String budget = "budget";
 
         public static final String genres = "genres";

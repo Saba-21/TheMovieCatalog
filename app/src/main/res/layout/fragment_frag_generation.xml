@@ -10,14 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"
+        android:background="#2b2b2b"
         android:id="@+id/button_layout">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="I would like to watch to..."
+            android:text="I Want Something Good To Watch To..."
+            android:background="@android:color/transparent"
+            android:textColor="@color/button_color"
             android:id="@+id/generate"
-            />
+            android:elevation="0dp"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -26,27 +29,32 @@
         android:orientation="vertical"
         android:visibility="invisible"
         android:padding="16dp"
+        android:background="@color/body_background"
         android:id="@+id/movie_layout">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
             android:layout_weight="2">
+
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:id="@+id/movie_poster"/>
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:orientation="vertical"
                 android:paddingLeft="10dp"
-                android:layout_gravity="center_vertical"
-                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
                 <TextView
                     android:layout_width="wrap_content"
                     android:text="Title"
+                    android:textColor="@color/text_color"
                     android:textSize="20dp"
                     android:id="@+id/movie_title"
                     android:layout_gravity="center_horizontal"
@@ -55,84 +63,107 @@
                     android:layout_width="match_parent"
                     android:text="Release date"
                     android:id="@+id/movie_date"
+                    android:textColor="@color/text_color"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:layout_width="match_parent"
                     android:text="Language"
+                    android:textColor="@color/text_color"
                     android:id="@+id/movie_language"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:layout_width="match_parent"
                     android:text="Runtime"
+                    android:textColor="@color/text_color"
                     android:id="@+id/movie_runtime"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:layout_width="match_parent"
                     android:text="Production Countries"
+                    android:textColor="@color/text_color"
                     android:id="@+id/movie_countries"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:layout_width="match_parent"
                     android:text="Production companies"
                     android:id="@+id/movie_companies"
+                    android:textColor="@color/text_color"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:layout_width="match_parent"
                     android:text="Genre"
                     android:id="@+id/movie_genre"
+                    android:textColor="@color/text_color"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:layout_width="match_parent"
                     android:text="Budget"
+                    android:textColor="@color/text_color"
                     android:id="@+id/movie_budget"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:layout_width="match_parent"
                     android:text="Revenue"
+                    android:textColor="@color/text_color"
                     android:id="@+id/movie_revenue"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:layout_width="match_parent"
                     android:text="Vote"
+                    android:textColor="@color/text_color"
                     android:id="@+id/movie_vote"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:layout_width="match_parent"
                     android:text="Popularity"
                     android:id="@+id/movie_popularity"
+                    android:textColor="@color/text_color"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:layout_width="match_parent"
                     android:text="Overview"
+                    android:textColor="@color/text_color"
                     android:id="@+id/movie_overview"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:orientation="horizontal"
+            android:layout_weight="0.5">
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:text="I'LL watch it"
+                android:textColor="@color/button_color"
+                android:background="@android:color/transparent"
                 android:id="@+id/like_watch"/>
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
+                android:background="@android:color/transparent"
                 android:text="I've watched it"
+                android:textColor="@color/button_color"
                 android:id="@+id/like_notwatch"/>
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/button_color"
                 android:text="I dont like it"
+                android:background="@android:color/transparent"
                 android:id="@+id/notlike_notwatch"/>
-
         </LinearLayout>
 
     </LinearLayout>

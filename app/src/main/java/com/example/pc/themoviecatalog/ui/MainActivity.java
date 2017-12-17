@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
-
 import com.example.pc.themoviecatalog.R;
 import com.example.pc.themoviecatalog.adapters.WPagerAdapter;
 
@@ -37,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+
                 switch (viewPager.getCurrentItem()) {
                     case 0:
                         page_1.setTextColor(Color.RED);
@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
-
 
     }
 

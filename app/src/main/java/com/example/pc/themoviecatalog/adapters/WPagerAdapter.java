@@ -15,19 +15,17 @@ public class WPagerAdapter extends FragmentPagerAdapter {
 
     private static int TOTAL_ITEMS = 3;
 
-    public WPagerAdapter(FragmentManager fm) {
-        super(fm);
-    }
+    public WPagerAdapter(FragmentManager fm) { super(fm); }
 
     @Override
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return FragGeneration.newInstance("", "");
+                return FragGeneration.newInstance();
             case 1:
-                return FragWatched.newInstance("", "");
+                return FragWatched.newInstance();
             case 2:
-                return FragWishes.newInstance("", "");
+                return FragWishes.newInstance();
             default:
                 return null;
         }

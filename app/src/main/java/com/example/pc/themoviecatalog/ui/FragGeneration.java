@@ -10,23 +10,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.pc.themoviecatalog.R;
 import com.example.pc.themoviecatalog.api.ApiClient;
+import com.example.pc.themoviecatalog.db.DbHelper;
 import com.example.pc.themoviecatalog.models.MovieModel;
 import com.example.pc.themoviecatalog.models.MovieResponseModel;
 import com.example.pc.themoviecatalog.models.TopRatedResponseModel;
 import com.squareup.picasso.Picasso;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FragGeneration extends Fragment implements View.OnClickListener {
 
+    private RelativeLayout buttonLayout;
     private LinearLayout movieLayout;
-    MovieModel movieModel;
+    private MovieModel movieModel;
     private ImageView moviePoster;
     private TextView movieTitle;
     private TextView movieDate;
@@ -44,13 +43,14 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
     private Button likeNotwatch;
     private Button notlikeNotwatch;
 
+    private static DbHelper dbHelper;
     private int page = 0;
     private int index = 0;
 
     public FragGeneration() {
     }
 
-    public static FragGeneration newInstance(String param1, String param2) {
+    public static FragGeneration newInstance() {
         FragGeneration fragment = new FragGeneration();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -65,16 +65,14 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View inf = inflater.inflate(R.layout.fragment_frag_generation, container, false);
-        final RelativeLayout buttonLayout = inf.findViewById(R.id.button_layout);
+
+        buttonLayout = inf.findViewById(R.id.button_layout);
         movieLayout = inf.findViewById(R.id.movie_layout);
 
-        inf.findViewById(R.id.generate).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonLayout.setVisibility(View.INVISIBLE);
-                getMovies();
-            }
-        });
+        inf.findViewById(R.id.generate).setOnClickListener(this);
+
+        dbHelper = new DbHelper(getContext());
+
         initView(inf);
         return inf;
     }
@@ -135,7 +133,6 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
     }
 
     public void setDataToLayout(){
-        Toast.makeText(getContext(), Integer.toString(page)+" "+Integer.toString(index), Toast.LENGTH_SHORT).show();
         Picasso.with(getContext()).load(ApiClient.BASE_IMAGE_URL_MEDIUM + movieModel.posterPath).into(moviePoster);
         movieTitle.setText(movieModel.title);
         movieDate.setText("Release date:  "+ movieModel.releaseDate);
@@ -179,12 +176,25 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.like_watch:
+                if (movieModel != null) {
+                    long rowId = dbHelper.addMovieData(movieModel, "want");
+                }
                 getMovies();
                 break;
+
             case R.id.like_notwatch:
+                if (movieModel != null) {
+                    long rowId = dbHelper.addMovieData(movieModel, "watched");
+                }
                 getMovies();
                 break;
+
             case R.id.notlike_notwatch:
+                getMovies();
+                break;
+
+            case R.id.generate:
+                buttonLayout.setVisibility(View.INVISIBLE);
                 getMovies();
                 break;
         }
