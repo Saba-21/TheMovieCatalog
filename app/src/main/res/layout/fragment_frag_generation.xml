@@ -22,6 +22,21 @@
             android:id="@+id/generate"
             android:elevation="0dp"/>
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:background="#2b2b2b"
+        android:id="@+id/load_layout">
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/loading"
+            android:background="@android:color/transparent"
+            android:id="@+id/load"
+            android:elevation="5dp"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

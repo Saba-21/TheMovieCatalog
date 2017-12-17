@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,7 +25,7 @@ import retrofit2.Response;
 
 public class FragGeneration extends Fragment implements View.OnClickListener {
 
-    private RelativeLayout buttonLayout;
+    private RelativeLayout buttonLayout, loadLayout;
     private LinearLayout movieLayout;
     private MovieModel movieModel;
     private ImageView moviePoster;
@@ -39,11 +41,11 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
     private TextView movieVote;
     private TextView moviePopularity;
     private TextView movieOverview;
-    private Button likeWatch;
-    private Button likeNotwatch;
-    private Button notlikeNotwatch;
-
-    private static DbHelper dbHelper;
+    private Button wantToWatch;
+    private Button alreadyWatched;
+    private Button donNotLike;
+    private ImageView loading;
+    private DbHelper dbHelper;
     private int page = 0;
     private int index = 0;
 
@@ -68,6 +70,8 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
 
         buttonLayout = inf.findViewById(R.id.button_layout);
         movieLayout = inf.findViewById(R.id.movie_layout);
+        loadLayout = inf.findViewById(R.id.load_layout);
+        loading = inf.findViewById(R.id.load);
 
         inf.findViewById(R.id.generate).setOnClickListener(this);
 
@@ -95,6 +99,7 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
                     public void onResponse(Call<MovieResponseModel> call, Response<MovieResponseModel> response) {
                         if (response.body().originalLanguage.equals("en")) {
                             setResponseData(response.body());
+                            loadLayout.setVisibility(View.INVISIBLE);
                             movieLayout.setVisibility(View.VISIBLE);
                             setDataToLayout();
                         }
@@ -163,22 +168,24 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
         moviePopularity = inf.findViewById(R.id.movie_popularity);
         movieOverview = inf.findViewById(R.id.movie_overview);
 
-        likeWatch = inf.findViewById(R.id.like_watch);
-        likeNotwatch = inf.findViewById(R.id.like_notwatch);
-        notlikeNotwatch = inf.findViewById(R.id.notlike_notwatch);
+        wantToWatch = inf.findViewById(R.id.like_watch);
+        alreadyWatched = inf.findViewById(R.id.like_notwatch);
+        donNotLike = inf.findViewById(R.id.notlike_notwatch);
 
-        likeWatch.setOnClickListener(this);
-        likeNotwatch.setOnClickListener(this);
-        notlikeNotwatch.setOnClickListener(this);
+        wantToWatch.setOnClickListener(this);
+        alreadyWatched.setOnClickListener(this);
+        donNotLike.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
+        Animation scaleAnimation = AnimationUtils.loadAnimation(getContext(),R.anim.scale);
         switch (v.getId()) {
             case R.id.like_watch:
                 if (movieModel != null) {
                     long rowId = dbHelper.addMovieData(movieModel, "want");
                 }
+                wantToWatch.startAnimation(scaleAnimation);
                 getMovies();
                 break;
 
@@ -186,15 +193,20 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
                 if (movieModel != null) {
                     long rowId = dbHelper.addMovieData(movieModel, "watched");
                 }
+                alreadyWatched.startAnimation(scaleAnimation);
                 getMovies();
                 break;
 
             case R.id.notlike_notwatch:
+                donNotLike.startAnimation(scaleAnimation);
                 getMovies();
                 break;
 
             case R.id.generate:
                 buttonLayout.setVisibility(View.INVISIBLE);
+                loadLayout.setVisibility(View.VISIBLE);
+                Animation fadeAnimation1 = AnimationUtils.loadAnimation(getContext(),R.anim.fade);
+                loading.startAnimation(fadeAnimation1);
                 getMovies();
                 break;
         }

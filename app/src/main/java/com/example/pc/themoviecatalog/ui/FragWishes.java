@@ -19,8 +19,8 @@ public class FragWishes extends Fragment {
 
     private RecyclerView recyclerView;
     private RVAdapter rvAdapter;
-    private static List<MovieModel> movieModels;
-    private static DbHelper dbHelper;
+    private List<MovieModel> movieModels;
+    private DbHelper dbHelper;
 
     public FragWishes() {
     }
