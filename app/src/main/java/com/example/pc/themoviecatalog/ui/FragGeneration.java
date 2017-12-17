@@ -14,7 +14,9 @@ import android.widget.Toast;
 
 import com.example.pc.themoviecatalog.R;
 import com.example.pc.themoviecatalog.api.ApiClient;
-import com.example.pc.themoviecatalog.api.MovieResponseModel;
+import com.example.pc.themoviecatalog.models.MovieModel;
+import com.example.pc.themoviecatalog.models.MovieResponseModel;
+import com.example.pc.themoviecatalog.models.TopRatedResponseModel;
 import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
@@ -23,13 +25,8 @@ import retrofit2.Response;
 
 public class FragGeneration extends Fragment implements View.OnClickListener {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
     private LinearLayout movieLayout;
-    MovieResponseModel movieData;
+    MovieModel movieModel;
     private ImageView moviePoster;
     private TextView movieTitle;
     private TextView movieDate;
@@ -46,7 +43,9 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
     private Button likeWatch;
     private Button likeNotwatch;
     private Button notlikeNotwatch;
-    int i = 99;
+
+    private int page = 0;
+    private int index = 0;
 
     public FragGeneration() {
     }
@@ -54,8 +53,6 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
     public static FragGeneration newInstance(String param1, String param2) {
         FragGeneration fragment = new FragGeneration();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,10 +60,6 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -79,45 +72,83 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 buttonLayout.setVisibility(View.INVISIBLE);
-                getDataFromApi();
+                getMovies();
             }
         });
         initView(inf);
         return inf;
     }
 
-    public void getDataFromApi() {
-        final Call<MovieResponseModel> movieResponseModelCall = new ApiClient().getApiInstance().getMovieData(i, ApiClient.API_KEY);
-
-        movieResponseModelCall.enqueue(new Callback<MovieResponseModel>() {
+    public void getMovies(){
+        if (index%20==0){
+            page++;
+            index = 0;
+        }
+        final Call<TopRatedResponseModel> movieIDs = new ApiClient().getApiInstance().getTopRatedMovies(ApiClient.API_KEY, page);
+        movieIDs.enqueue(new Callback<TopRatedResponseModel>() {
             @Override
-            public void onResponse(Call<MovieResponseModel> call, Response<MovieResponseModel> response) {
-                movieData = response.body();
-                movieLayout.setVisibility(View.VISIBLE);
-                setDataToLayout();
+            public void onResponse(Call<TopRatedResponseModel> call, Response<TopRatedResponseModel> response) {
+
+                int nextID = response.body().getResults().get(index++).id;
+
+                final Call<MovieResponseModel> movieDetails = new ApiClient().getApiInstance().getMovieData(nextID, ApiClient.API_KEY);
+                movieDetails.enqueue(new Callback<MovieResponseModel>() {
+                    @Override
+                    public void onResponse(Call<MovieResponseModel> call, Response<MovieResponseModel> response) {
+                        if (response.body().originalLanguage.equals("en")) {
+                            setResponseData(response.body());
+                            movieLayout.setVisibility(View.VISIBLE);
+                            setDataToLayout();
+                        }
+                        else{
+                            getMovies();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<MovieResponseModel> call, Throwable t) {
+                    }
+                });
             }
             @Override
-            public void onFailure(Call<MovieResponseModel> call, Throwable t) {
+            public void onFailure(Call<TopRatedResponseModel> call, Throwable t) {
             }
         });
-        i++;
+    }
+
+    public void setResponseData(MovieResponseModel response){
+        movieModel = new MovieModel();
+        movieModel.budget = response.budget;
+        movieModel.id = response.id;
+        movieModel.originalLanguage = response.originalLanguage;
+        movieModel.overview = response.overview;
+        movieModel.popularity = response.popularity;
+        movieModel.posterPath = response.posterPath;
+        movieModel.releaseDate = response.releaseDate;
+        movieModel.revenue = response.revenue;
+        movieModel.runtime = response.runtime;
+        movieModel.title = response.title;
+        movieModel.voteAverage = response.voteAverage;
+        movieModel.setGenres(response.genres);
+        movieModel.setSpokenLanguages(response.spokenLanguages);
+        movieModel.setProductionCompanies(response.productionCompanies);
+        movieModel.setProductionCountries(response.productionCountries);
     }
 
     public void setDataToLayout(){
-        Picasso.with(getContext()).load(ApiClient.BASE_IMAGE_URL_MEDIUM + movieData.posterPath).into(moviePoster);
-        movieTitle.setText("Title:  "+movieData.title);
-        movieDate.setText("Release date:  "+movieData.releaseDate);
-        movieLanguage.setText("Language:  "+movieData.getLanguages());
-        movieRuntime.setText("Runtime:  "+movieData.runtime+"mins");
-        movieCountries.setText("Production Countries:  "+movieData.getCountries());
-        movieCompanies.setText("Production companies:  "+movieData.getCompanies());
-        movieGenre.setText("Genre:  "+movieData.getGenres());
-        movieBudget.setText("Budget:  "+movieData.budget+"$");
-        movieRevenue.setText("Revenue:  "+movieData.revenue+"$");
-        movieVote.setText("Vote:  "+movieData.voteAverage);
-        moviePopularity.setText("Popularity:  "+movieData.voteCount);
-        movieOverview.setText("Overview:  "+movieData.overview);
-
+        Toast.makeText(getContext(), Integer.toString(page)+" "+Integer.toString(index), Toast.LENGTH_SHORT).show();
+        Picasso.with(getContext()).load(ApiClient.BASE_IMAGE_URL_MEDIUM + movieModel.posterPath).into(moviePoster);
+        movieTitle.setText(movieModel.title);
+        movieDate.setText("Release date:  "+ movieModel.releaseDate);
+        movieLanguage.setText("Language:  "+ movieModel.spokenLanguages);
+        movieRuntime.setText("Runtime:  "+ movieModel.runtime+"mins");
+        movieCountries.setText("Production Countries:  "+ movieModel.productionCountries);
+        movieCompanies.setText("Production companies:  "+ movieModel.productionCompanies);
+        movieGenre.setText("Genre:  "+ movieModel.genres);
+        movieBudget.setText("Budget:  "+ movieModel.budget+"$");
+        movieRevenue.setText("Revenue:  "+ movieModel.revenue+"$");
+        movieVote.setText("Vote:  "+ movieModel.voteAverage);
+        moviePopularity.setText("Popularity:  "+ movieModel.popularity);
+        movieOverview.setText("Overview:  "+ movieModel.overview);
     }
 
     private void initView(View inf) {
@@ -148,13 +179,13 @@ public class FragGeneration extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.like_watch:
-                getDataFromApi();
+                getMovies();
                 break;
             case R.id.like_notwatch:
-                getDataFromApi();
+                getMovies();
                 break;
             case R.id.notlike_notwatch:
-                getDataFromApi();
+                getMovies();
                 break;
         }
     }

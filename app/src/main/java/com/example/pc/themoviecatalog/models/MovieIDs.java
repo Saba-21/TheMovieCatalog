@@ -1,19 +1,18 @@
 package com.example.pc.themoviecatalog.models;
 
-/**
- * Created by PC on 17-Dec-17.
- */
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Genre {
+import java.util.List;
+
+/**
+ * Created by PC on 15-Dec-17.
+ */
+
+public class MovieIDs {
 
     @SerializedName("id")
     @Expose
     public Integer id;
-    @SerializedName("name")
-    @Expose
-    public String name;
 
 }
